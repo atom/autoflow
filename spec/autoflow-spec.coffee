@@ -7,7 +7,7 @@ describe "Autoflow package", ->
   describe "autoflow:reflow-paragraph", ->
     beforeEach ->
       window.rootView = new RootView
-      rootView.open()
+      rootView.openSync()
       atom.activatePackage('autoflow')
       rootView.attachToDom()
       editor = rootView.getActiveView()
