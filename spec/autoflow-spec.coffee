@@ -1,18 +1,17 @@
 {RootView} = require 'atom'
 
 describe "Autoflow package", ->
-  editor = null
-  autoflow = null
+  [autoflow, editor] = []
 
   describe "autoflow:reflow-paragraph", ->
     beforeEach ->
-      window.rootView = new RootView
-      rootView.openSync()
-      atom.activatePackage('autoflow')
-      rootView.attachToDom()
-      editor = rootView.getActiveView()
+      atom.rootView = new RootView
+      atom.rootView.openSync()
+      atom.packages.activatePackage('autoflow')
+      atom.rootView.attachToDom()
+      editor = atom.rootView.getActiveView()
 
-      config.set('editor.preferredLineLength', 30)
+      atom.config.set('editor.preferredLineLength', 30)
 
     it "rearranges line breaks in the current paragraph to ensure lines are shorter than config.editor.preferredLineLength", ->
       editor.setText """

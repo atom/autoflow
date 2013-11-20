@@ -1,13 +1,13 @@
 module.exports =
   activate: ->
-    rootView.eachEditor (editor) =>
+    atom.rootView.eachEditor (editor) =>
       return unless editor.attached and editor.getPane()?
       editor.command 'autoflow:reflow-paragraph', (e) =>
         @reflowParagraph(e.currentTargetView())
 
   reflowParagraph: (editor) ->
     if range = editor.getCurrentParagraphBufferRange()
-      wrapColumn = config.getPositiveInt('editor.preferredLineLength', 80)
+      wrapColumn = atom.config.getPositiveInt('editor.preferredLineLength', 80)
       editor.getBuffer().change(range, @reflow(editor.getTextInRange(range), {wrapColumn}))
 
   reflow: (text, {wrapColumn}) ->
