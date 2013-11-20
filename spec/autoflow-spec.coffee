@@ -57,8 +57,8 @@ describe "Autoflow package", ->
 
   describe "reflowing text", ->
     beforeEach ->
-      window.rootView = new RootView
-      autoflow = atom.activatePackage('autoflow', immediate: true).mainModule
+      atom.rootView = new RootView
+      autoflow = atom.packages.activatePackage('autoflow', immediate: true).mainModule
 
     it 'respects current paragraphs', ->
       text = '''
