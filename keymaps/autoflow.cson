@@ -1,2 +1,5 @@
-'.editor':
+'.platform-darwin .editor':
   'alt-meta-q': 'autoflow:reflow-paragraph'
+
+'.platform-win32 .editor':
+  'alt-ctrl-q': 'autoflow:reflow-paragraph'
