@@ -1,15 +1,15 @@
-{RootView} = require 'atom'
+{WorkspaceView} = require 'atom'
 
 describe "Autoflow package", ->
   [autoflow, editor] = []
 
   describe "autoflow:reflow-paragraph", ->
     beforeEach ->
-      atom.rootView = new RootView
-      atom.rootView.openSync()
+      atom.workspaceView = new WorkspaceView
+      atom.workspaceView.openSync()
       atom.packages.activatePackage('autoflow')
-      atom.rootView.attachToDom()
-      editor = atom.rootView.getActiveView()
+      atom.workspaceView.attachToDom()
+      editor = atom.workspaceView.getActiveView()
 
       atom.config.set('editor.preferredLineLength', 30)
 
@@ -57,7 +57,7 @@ describe "Autoflow package", ->
 
   describe "reflowing text", ->
     beforeEach ->
-      atom.rootView = new RootView
+      atom.workspaceView = new WorkspaceView
       autoflow = atom.packages.activatePackage('autoflow', immediate: true).mainModule
 
     it 'respects current paragraphs', ->
