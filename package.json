@@ -6,17 +6,8 @@
   "activationEvents": {
     "autoflow:reflow-paragraph": ".editor"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/atom/autoflow.git"
-  },
-  "bugs": {
-    "url": "https://github.com/atom/autoflow/issues"
-  },
+  "repository": "https://github.com/atom/autoflow",
   "engines": {
     "atom": "*"
-  },
-  "publishConfig": {
-    "registry": "https://atom.cloudant.com/registry/_design/app/_rewrite"
   }
 }
