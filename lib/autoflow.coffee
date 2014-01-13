@@ -1,9 +1,9 @@
 module.exports =
   activate: ->
-    atom.workspaceView.eachEditorView (editor) =>
-      return unless editor.attached and editor.getPane()?
-      editor.command 'autoflow:reflow-paragraph', (e) =>
-        @reflowParagraph(e.currentTargetView())
+    atom.workspaceView.eachEditorView (editorView) =>
+      return unless editorView.attached and editorView.getPane()?
+      editorView.command 'autoflow:reflow-paragraph', =>
+        @reflowParagraph(editorView.editor)
 
   reflowParagraph: (editor) ->
     if range = editor.getCurrentParagraphBufferRange()
