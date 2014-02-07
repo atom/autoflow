@@ -7,12 +7,19 @@ describe "Autoflow package", ->
     beforeEach ->
       atom.workspaceView = new WorkspaceView
       atom.workspaceView.openSync()
-      atom.packages.activatePackage('autoflow')
       atom.workspaceView.attachToDom()
+
       editorView = atom.workspaceView.getActiveView()
       {editor} = editorView
 
       atom.config.set('editor.preferredLineLength', 30)
+
+      activationPromise = atom.packages.activatePackage('autoflow')
+
+      editorView.trigger 'autoflow:reflow-paragraph' # Trigger the activation event
+
+      waitsForPromise ->
+        activationPromise
 
     it "rearranges line breaks in the current paragraph to ensure lines are shorter than config.editor.preferredLineLength", ->
       editor.setText """
