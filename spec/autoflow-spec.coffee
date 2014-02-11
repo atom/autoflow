@@ -66,7 +66,7 @@ describe "Autoflow package", ->
   describe "reflowing text", ->
     beforeEach ->
       atom.workspaceView = new WorkspaceView
-      autoflow = atom.packages.activatePackage('autoflow', immediate: true).mainModule
+      autoflow = require("../lib/autoflow")
 
     it 'respects current paragraphs', ->
       text = '''
