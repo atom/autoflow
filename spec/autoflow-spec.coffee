@@ -63,6 +63,51 @@ describe "Autoflow package", ->
         words
       """
 
+  describe "autoflow:reflow-selection", ->
+    beforeEach ->
+      atom.workspaceView = new WorkspaceView
+      atom.workspaceView.openSync()
+      atom.workspaceView.attachToDom()
+
+      editorView = atom.workspaceView.getActiveView()
+      {editor} = editorView
+
+      atom.config.set('editor.preferredLineLength', 30)
+
+      activationPromise = atom.packages.activatePackage('autoflow')
+
+      editorView.trigger 'autoflow:reflow-selection' # Trigger the activation event
+
+      waitsForPromise ->
+        activationPromise
+
+    it "reflows the current selection", ->
+      editor.setText """
+        This is the first paragraph and it is longer than the preferred line length so it should be reflowed.
+
+        This is a short paragraph.
+
+        Another long paragraph, it should also be reflowed with the use of this single command.
+      """
+
+      editor.selectAll()
+      editorView.trigger 'autoflow:reflow-selection'
+
+      expect(editor.getText()).toBe """
+        This is the first paragraph
+        and it is longer than the
+        preferred line length so it
+        should be reflowed.
+
+        This is a short paragraph.
+
+        Another long paragraph, it
+        should also be reflowed with
+        the use of this single
+        command.
+      """
+
+
   describe "reflowing text", ->
     beforeEach ->
       atom.workspaceView = new WorkspaceView

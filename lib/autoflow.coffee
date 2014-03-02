@@ -4,9 +4,16 @@ module.exports =
       return unless editorView.attached and editorView.getPane()?
       editorView.command 'autoflow:reflow-paragraph', =>
         @reflowParagraph(editorView.editor)
+      editorView.command 'autoflow:reflow-selection', =>
+        @reflowSelection(editorView.editor)
 
   reflowParagraph: (editor) ->
     if range = editor.getCurrentParagraphBufferRange()
+      wrapColumn = atom.config.getPositiveInt('editor.preferredLineLength', 80)
+      editor.getBuffer().change(range, @reflow(editor.getTextInRange(range), {wrapColumn}))
+
+  reflowSelection: (editor) ->
+    if range = editor.getSelectedBufferRange()
       wrapColumn = atom.config.getPositiveInt('editor.preferredLineLength', 80)
       editor.getBuffer().change(range, @reflow(editor.getTextInRange(range), {wrapColumn}))
 
