@@ -9,11 +9,11 @@ module.exports =
 
   reflowParagraph: (editor) ->
     if range = editor.getCurrentParagraphBufferRange()
-      editor.getBuffer().change(range, @reflow(editor.getTextInRange(range), {wrapColumn: @getLineLength()}))
+      editor.getBuffer().change(range, @reflow(editor.getTextInRange(range), {wrapColumn: @getPreferredLineLength()}))
 
   reflowSelection: (editor) ->
     if range = editor.getSelectedBufferRange()
-      editor.getBuffer().change(range, @reflow(editor.getTextInRange(range), {wrapColumn: @getLineLength()}))
+      editor.getBuffer().change(range, @reflow(editor.getTextInRange(range), {wrapColumn: @getPreferredLineLength()}))
 
   reflow: (text, {wrapColumn}) ->
     paragraphs = []
@@ -43,8 +43,8 @@ module.exports =
 
     paragraphs.join('\n\n')
 
-  getLineLength: (lineLength=80) ->
-    atom.config.getPositiveInt('editor.preferredLineLength', lineLength)
+  getPreferredLineLength: ->
+    atom.config.getPositiveInt('editor.preferredLineLength', 80)
 
   wrapSegment: (segment, currentLineLength, wrapColumn) ->
     /\w/.test(segment) and
