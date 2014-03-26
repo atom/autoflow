@@ -21,7 +21,7 @@ describe "Autoflow package", ->
       waitsForPromise ->
         activationPromise
 
-    it "rrearranges line breaks in the current selection to ensure lines are shorter than config.editor.preferredLineLength", ->
+    it "rearranges line breaks in the current selection to ensure lines are shorter than config.editor.preferredLineLength", ->
       editor.setText """
         This is the first paragraph and it is longer than the preferred line length so it should be reflowed.
 
