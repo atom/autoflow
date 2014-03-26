@@ -3,10 +3,6 @@
     'label': 'Edit'
     'submenu': [
       {
-        'label': 'Reflow Paragraph'
-        'command': 'autoflow:reflow-paragraph'
-      },
-      {
         'label': 'Reflow Selection'
         'command': 'autoflow:reflow-selection'
       }

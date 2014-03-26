@@ -3,66 +3,6 @@
 describe "Autoflow package", ->
   [autoflow, editor, editorView] = []
 
-  describe "autoflow:reflow-paragraph", ->
-    beforeEach ->
-      atom.workspaceView = new WorkspaceView
-      atom.workspaceView.openSync()
-      atom.workspaceView.attachToDom()
-
-      editorView = atom.workspaceView.getActiveView()
-      {editor} = editorView
-
-      atom.config.set('editor.preferredLineLength', 30)
-
-      activationPromise = atom.packages.activatePackage('autoflow')
-
-      editorView.trigger 'autoflow:reflow-paragraph' # Trigger the activation event
-
-      waitsForPromise ->
-        activationPromise
-
-    it "rearranges line breaks in the current paragraph to ensure lines are shorter than config.editor.preferredLineLength", ->
-      editor.setText """
-        This is a preceding paragraph, which shouldn't be modified by a reflow of the following paragraph.
-
-        The quick brown fox jumps over the lazy
-        dog. The preceding sentence contains every letter
-        in the entire English alphabet, which has absolutely no relevance
-        to this test.
-
-        This is a following paragraph, which shouldn't be modified by a reflow of the preciding paragraph.
-
-      """
-
-      editor.setCursorBufferPosition([3, 5])
-      editorView.trigger 'autoflow:reflow-paragraph'
-
-      expect(editor.getText()).toBe """
-        This is a preceding paragraph, which shouldn't be modified by a reflow of the following paragraph.
-
-        The quick brown fox jumps over
-        the lazy dog. The preceding
-        sentence contains every letter
-        in the entire English
-        alphabet, which has absolutely
-        no relevance to this test.
-
-        This is a following paragraph, which shouldn't be modified by a reflow of the preciding paragraph.
-
-      """
-
-    it "allows for single words that exceed the preferred wrap column length", ->
-      editor.setText("this-is-a-super-long-word-that-shouldn't-break-autoflow and these are some smaller words")
-
-      editor.setCursorBufferPosition([0, 4])
-      editorView.trigger 'autoflow:reflow-paragraph'
-
-      expect(editor.getText()).toBe """
-        this-is-a-super-long-word-that-shouldn't-break-autoflow
-        and these are some smaller
-        words
-      """
-
   describe "autoflow:reflow-selection", ->
     beforeEach ->
       atom.workspaceView = new WorkspaceView
@@ -81,7 +21,7 @@ describe "Autoflow package", ->
       waitsForPromise ->
         activationPromise
 
-    it "reflows the current selection", ->
+    it "rrearranges line breaks in the current selection to ensure lines are shorter than config.editor.preferredLineLength", ->
       editor.setText """
         This is the first paragraph and it is longer than the preferred line length so it should be reflowed.
 
@@ -107,6 +47,48 @@ describe "Autoflow package", ->
         command.
       """
 
+
+    it "reflows the current paragraph if nothing is selected", ->
+      editor.setText """
+        This is a preceding paragraph, which shouldn't be modified by a reflow of the following paragraph.
+
+        The quick brown fox jumps over the lazy
+        dog. The preceding sentence contains every letter
+        in the entire English alphabet, which has absolutely no relevance
+        to this test.
+
+        This is a following paragraph, which shouldn't be modified by a reflow of the preciding paragraph.
+
+      """
+
+      editor.setCursorBufferPosition([3, 5])
+      editorView.trigger 'autoflow:reflow-selection'
+
+      expect(editor.getText()).toBe """
+        This is a preceding paragraph, which shouldn't be modified by a reflow of the following paragraph.
+
+        The quick brown fox jumps over
+        the lazy dog. The preceding
+        sentence contains every letter
+        in the entire English
+        alphabet, which has absolutely
+        no relevance to this test.
+
+        This is a following paragraph, which shouldn't be modified by a reflow of the preciding paragraph.
+
+      """
+
+    it "allows for single words that exceed the preferred wrap column length", ->
+      editor.setText("this-is-a-super-long-word-that-shouldn't-break-autoflow and these are some smaller words")
+
+      editor.selectAll()
+      editorView.trigger 'autoflow:reflow-selection'
+
+      expect(editor.getText()).toBe """
+        this-is-a-super-long-word-that-shouldn't-break-autoflow
+        and these are some smaller
+        words
+      """
 
   describe "reflowing text", ->
     beforeEach ->

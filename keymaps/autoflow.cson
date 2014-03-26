@@ -1,7 +1,5 @@
 '.platform-darwin .editor':
-  'alt-cmd-q': 'autoflow:reflow-paragraph'
-  'alt-cmd-shift-q': 'autoflow:reflow-selection'
+  'alt-cmd-q': 'autoflow:reflow-selection'
 
 '.platform-win32 .editor':
-  'alt-ctrl-q': 'autoflow:reflow-paragraph'
-  'alt-ctrl-shift-q': 'autoflow:reflow-selection'
+  'alt-ctrl-q': 'autoflow:reflow-selection'
