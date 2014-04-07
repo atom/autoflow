@@ -3,7 +3,7 @@
 describe "Autoflow package", ->
   [autoflow, editor, editorView] = []
 
-  describe "autoflow:reflow-paragraph", ->
+  describe "autoflow:reflow-selection", ->
     beforeEach ->
       atom.workspaceView = new WorkspaceView
       atom.workspaceView.openSync()
@@ -16,12 +16,39 @@ describe "Autoflow package", ->
 
       activationPromise = atom.packages.activatePackage('autoflow')
 
-      editorView.trigger 'autoflow:reflow-paragraph' # Trigger the activation event
+      editorView.trigger 'autoflow:reflow-selection' # Trigger the activation event
 
       waitsForPromise ->
         activationPromise
 
-    it "rearranges line breaks in the current paragraph to ensure lines are shorter than config.editor.preferredLineLength", ->
+    it "rearranges line breaks in the current selection to ensure lines are shorter than config.editor.preferredLineLength", ->
+      editor.setText """
+        This is the first paragraph and it is longer than the preferred line length so it should be reflowed.
+
+        This is a short paragraph.
+
+        Another long paragraph, it should also be reflowed with the use of this single command.
+      """
+
+      editor.selectAll()
+      editorView.trigger 'autoflow:reflow-selection'
+
+      expect(editor.getText()).toBe """
+        This is the first paragraph
+        and it is longer than the
+        preferred line length so it
+        should be reflowed.
+
+        This is a short paragraph.
+
+        Another long paragraph, it
+        should also be reflowed with
+        the use of this single
+        command.
+      """
+
+
+    it "reflows the current paragraph if nothing is selected", ->
       editor.setText """
         This is a preceding paragraph, which shouldn't be modified by a reflow of the following paragraph.
 
@@ -35,7 +62,7 @@ describe "Autoflow package", ->
       """
 
       editor.setCursorBufferPosition([3, 5])
-      editorView.trigger 'autoflow:reflow-paragraph'
+      editorView.trigger 'autoflow:reflow-selection'
 
       expect(editor.getText()).toBe """
         This is a preceding paragraph, which shouldn't be modified by a reflow of the following paragraph.
@@ -54,8 +81,8 @@ describe "Autoflow package", ->
     it "allows for single words that exceed the preferred wrap column length", ->
       editor.setText("this-is-a-super-long-word-that-shouldn't-break-autoflow and these are some smaller words")
 
-      editor.setCursorBufferPosition([0, 4])
-      editorView.trigger 'autoflow:reflow-paragraph'
+      editor.selectAll()
+      editorView.trigger 'autoflow:reflow-selection'
 
       expect(editor.getText()).toBe """
         this-is-a-super-long-word-that-shouldn't-break-autoflow
