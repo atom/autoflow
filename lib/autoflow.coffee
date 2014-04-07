@@ -7,11 +7,9 @@ module.exports =
 
   reflowSelection: (editor) ->
     range = editor.getSelectedBufferRange()
+    range = editor.getCurrentParagraphBufferRange() if range.isEmpty()
 
-    if range.isEmpty()
-      range = editor.getCurrentParagraphBufferRange()
-
-    if range
+    if range?
       editor.getBuffer().change(range, @reflow(editor.getTextInRange(range), {wrapColumn: @getPreferredLineLength()}))
 
   reflow: (text, {wrapColumn}) ->
