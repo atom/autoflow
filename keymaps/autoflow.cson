@@ -3,3 +3,6 @@
 
 '.platform-win32 .editor':
   'alt-ctrl-q': 'autoflow:reflow-selection'
+
+'.platform-linux .editor':
+  'alt-ctrl-q': 'autoflow:reflow-selection'
