@@ -5,18 +5,23 @@ describe "Autoflow package", ->
 
   describe "autoflow:reflow-selection", ->
     beforeEach ->
+      activationPromise = null
       atom.workspaceView = new WorkspaceView
-      atom.workspaceView.openSync()
-      atom.workspaceView.attachToDom()
 
-      editorView = atom.workspaceView.getActiveView()
-      {editor} = editorView
+      waitsForPromise ->
+        atom.workspace.open()
 
-      atom.config.set('editor.preferredLineLength', 30)
+      runs ->
+        atom.workspaceView.attachToDom()
 
-      activationPromise = atom.packages.activatePackage('autoflow')
+        editorView = atom.workspaceView.getActiveView()
+        {editor} = editorView
 
-      editorView.trigger 'autoflow:reflow-selection' # Trigger the activation event
+        atom.config.set('editor.preferredLineLength', 30)
+
+        activationPromise = atom.packages.activatePackage('autoflow')
+
+        editorView.trigger 'autoflow:reflow-selection' # Trigger the activation event
 
       waitsForPromise ->
         activationPromise

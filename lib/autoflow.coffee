@@ -10,7 +10,7 @@ module.exports =
     range = editor.getCurrentParagraphBufferRange() if range.isEmpty()
 
     if range?
-      editor.getBuffer().change(range, @reflow(editor.getTextInRange(range), {wrapColumn: @getPreferredLineLength()}))
+      editor.getBuffer().setTextInRange(range, @reflow(editor.getTextInRange(range), {wrapColumn: @getPreferredLineLength()}))
 
   reflow: (text, {wrapColumn}) ->
     paragraphs = []
