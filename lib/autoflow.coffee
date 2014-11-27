@@ -1,9 +1,8 @@
 module.exports =
   activate: ->
-    atom.workspaceView.eachEditorView (editorView) =>
-      return unless editorView.attached and editorView.getPane()?
-      editorView.command 'autoflow:reflow-selection', =>
-        @reflowSelection(editorView.editor)
+    atom.commands.add 'atom-text-editor',
+      'autoflow:reflow-selection': (event) =>
+        @reflowSelection(event.target.getModel())
 
   reflowSelection: (editor) ->
     range = editor.getSelectedBufferRange()
@@ -41,7 +40,7 @@ module.exports =
     paragraphs.join('\n\n')
 
   getPreferredLineLength: ->
-    atom.config.getPositiveInt('editor.preferredLineLength', 80)
+    atom.config.get('editor.preferredLineLength')
 
   wrapSegment: (segment, currentLineLength, wrapColumn) ->
     /\w/.test(segment) and
