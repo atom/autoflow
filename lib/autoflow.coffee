@@ -2,7 +2,7 @@ module.exports =
   activate: ->
     atom.commands.add 'atom-text-editor',
       'autoflow:reflow-selection': (event) =>
-        @reflowSelection(event.target.getModel())
+        @reflowSelection(event.currentTarget.getModel())
 
   reflowSelection: (editor) ->
     range = editor.getSelectedBufferRange()
