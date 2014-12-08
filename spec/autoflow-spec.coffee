@@ -1,27 +1,22 @@
-{WorkspaceView} = require 'atom'
-
 describe "Autoflow package", ->
-  [autoflow, editor, editorView] = []
+  [autoflow, editor, editorElement] = []
 
   describe "autoflow:reflow-selection", ->
     beforeEach ->
       activationPromise = null
-      atom.workspaceView = new WorkspaceView
 
       waitsForPromise ->
         atom.workspace.open()
 
       runs ->
-        atom.workspaceView.attachToDom()
-
-        editorView = atom.workspaceView.getActiveView()
-        {editor} = editorView
+        editor = atom.workspace.getActiveTextEditor()
+        editorElement = atom.views.getView(editor)
 
         atom.config.set('editor.preferredLineLength', 30)
 
         activationPromise = atom.packages.activatePackage('autoflow')
 
-        editorView.trigger 'autoflow:reflow-selection' # Trigger the activation event
+        atom.commands.dispatch editorElement, 'autoflow:reflow-selection'
 
       waitsForPromise ->
         activationPromise
@@ -36,7 +31,7 @@ describe "Autoflow package", ->
       """
 
       editor.selectAll()
-      editorView.trigger 'autoflow:reflow-selection'
+      atom.commands.dispatch editorElement, 'autoflow:reflow-selection'
 
       expect(editor.getText()).toBe """
         This is the first paragraph
@@ -52,7 +47,6 @@ describe "Autoflow package", ->
         command.
       """
 
-
     it "reflows the current paragraph if nothing is selected", ->
       editor.setText """
         This is a preceding paragraph, which shouldn't be modified by a reflow of the following paragraph.
@@ -67,7 +61,7 @@ describe "Autoflow package", ->
       """
 
       editor.setCursorBufferPosition([3, 5])
-      editorView.trigger 'autoflow:reflow-selection'
+      atom.commands.dispatch editorElement, 'autoflow:reflow-selection'
 
       expect(editor.getText()).toBe """
         This is a preceding paragraph, which shouldn't be modified by a reflow of the following paragraph.
@@ -87,7 +81,7 @@ describe "Autoflow package", ->
       editor.setText("this-is-a-super-long-word-that-shouldn't-break-autoflow and these are some smaller words")
 
       editor.selectAll()
-      editorView.trigger 'autoflow:reflow-selection'
+      atom.commands.dispatch editorElement, 'autoflow:reflow-selection'
 
       expect(editor.getText()).toBe """
         this-is-a-super-long-word-that-shouldn't-break-autoflow
@@ -97,7 +91,6 @@ describe "Autoflow package", ->
 
   describe "reflowing text", ->
     beforeEach ->
-      atom.workspaceView = new WorkspaceView
       autoflow = require("../lib/autoflow")
 
     it 'respects current paragraphs', ->
