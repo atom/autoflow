@@ -21,6 +21,17 @@ describe "Autoflow package", ->
       waitsForPromise ->
         activationPromise
 
+    it "uses the preferred line length based on the editor's scope", ->
+      atom.config.set('editor.preferredLineLength', 4, scopeSelector: '.text.plain.null-grammar')
+      editor.setText("foo bar")
+      editor.selectAll()
+      atom.commands.dispatch editorElement, 'autoflow:reflow-selection'
+
+      expect(editor.getText()).toBe """
+        foo
+        bar
+      """
+
     it "rearranges line breaks in the current selection to ensure lines are shorter than config.editor.preferredLineLength", ->
       editor.setText """
         This is the first paragraph and it is longer than the preferred line length so it should be reflowed.
