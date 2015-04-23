@@ -23,6 +23,7 @@ module.exports =
       linePrefix = block.match(/^\s*[\/#*-]*\s*/g)[0]
       blockLines = block.split('\n')
       blockLines = (blockLine.replace(new RegExp('^' + linePrefix.replace('*', '\\*')), '') for blockLine in blockLines) if linePrefix
+      blockLines = (blockLine.replace(/^\s*/, '') for blockLine in blockLines)
 
       lines = []
       currentLine = []

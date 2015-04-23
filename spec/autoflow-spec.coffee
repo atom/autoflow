@@ -207,3 +207,20 @@ describe "Autoflow package", ->
           * soidjfiojsoidj foi
       '''
       expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
+    it 'handles different initial indentation', ->
+      text = '''
+        Magna ea magna fugiat nisi minim in id duis. Culpa sit sint consequat quis elit magna pariatur incididunt
+          proident laborum deserunt est aliqua reprehenderit. Occaecat et ex non do Lorem irure adipisicing mollit excepteur
+          eu ullamco consectetur. Ex ex Lorem duis labore quis ad exercitation elit dolor non adipisicing. Pariatur commodo ullamco
+          culpa dolor sunt enim. Ullamco dolore do ea nulla ut commodo minim consequat cillum ad velit quis.
+      '''
+      
+      res = '''
+        Magna ea magna fugiat nisi minim in id duis. Culpa sit sint consequat quis elit
+        magna pariatur incididunt proident laborum deserunt est aliqua reprehenderit.
+        Occaecat et ex non do Lorem irure adipisicing mollit excepteur eu ullamco
+        consectetur. Ex ex Lorem duis labore quis ad exercitation elit dolor non
+        adipisicing. Pariatur commodo ullamco culpa dolor sunt enim. Ullamco dolore do
+        ea nulla ut commodo minim consequat cillum ad velit quis.
+      '''
+      expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
