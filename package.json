@@ -9,6 +9,7 @@
     ]
   },
   "repository": "https://github.com/atom/autoflow",
+  "license": "MIT",
   "engines": {
     "atom": "*"
   }
