@@ -207,3 +207,10 @@ describe "Autoflow package", ->
           * soidjfiojsoidj foi
       '''
       expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
+
+    it "does not throw invalid regular expression errors (regression)", ->
+      text = '''
+        *** Lorem ipsum dolor sit amet
+      '''
+
+      expect(autoflow.reflow(text, wrapColumn: 80)).toEqual text

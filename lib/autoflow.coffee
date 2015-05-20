@@ -1,3 +1,5 @@
+_ = require 'underscore-plus'
+
 module.exports =
   activate: ->
     atom.commands.add 'atom-text-editor',
@@ -22,7 +24,11 @@ module.exports =
       # TODO: this could be more language specific. Use the actual comment char.
       linePrefix = block.match(/^\s*[\/#*-]*\s*/g)[0]
       blockLines = block.split('\n')
-      blockLines = (blockLine.replace(new RegExp('^' + linePrefix.replace('*', '\\*')), '') for blockLine in blockLines) if linePrefix
+
+      if linePrefix
+        escapedLinePrefix = _.escapeRegExp(linePrefix)
+        blockLines = blockLines.map (blockLine) ->
+          blockLine.replace(///^#{escapedLinePrefix}///, '')
 
       lines = []
       currentLine = []

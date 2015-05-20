@@ -12,5 +12,8 @@
   "license": "MIT",
   "engines": {
     "atom": "*"
+  },
+  "dependencies": {
+    "underscore-plus": "^1.6.6"
   }
 }
