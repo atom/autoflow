@@ -30,7 +30,8 @@ module.exports =
         blockLines = blockLines.map (blockLine) ->
           blockLine.replace(///^#{escapedLinePrefix}///, '')
 
-      blockLines = (blockLine.replace(/^\s*/, '') for blockLine in blockLines)
+      blockLines = blockLines.map (blockLine) ->
+        blockLine.replace(/^\s+/, '')
 
       lines = []
       currentLine = []
