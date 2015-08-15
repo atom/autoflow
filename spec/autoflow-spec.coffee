@@ -254,5 +254,17 @@ describe "Autoflow package", ->
         following line. Another long line, it should also be reflowed with everything
         above it when it is all reflowed.
         '''
+      expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
+
+    it 'handles cyrillic text', ->
+      text = '''
+        В начале июля, в чрезвычайно жаркое время, под вечер, один молодой человек вышел из своей каморки, которую нанимал от жильцов в С-м переулке, на улицу и медленно, как бы в нерешимости, отправился к К-ну мосту.
+      '''
+
+      res = '''
+        В начале июля, в чрезвычайно жаркое время, под вечер, один молодой человек вышел
+        из своей каморки, которую нанимал от жильцов в С-м переулке, на улицу и
+        медленно, как бы в нерешимости, отправился к К-ну мосту.
+      '''
 
       expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
