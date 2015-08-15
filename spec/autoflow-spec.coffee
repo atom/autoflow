@@ -232,3 +232,16 @@ describe "Autoflow package", ->
         ea nulla ut commodo minim consequat cillum ad velit quis.
       '''
       expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
+
+    it 'handles cyrillic text', ->
+      text = '''
+        В начале июля, в чрезвычайно жаркое время, под вечер, один молодой человек вышел из своей каморки, которую нанимал от жильцов в С-м переулке, на улицу и медленно, как бы в нерешимости, отправился к К-ну мосту.
+      '''
+
+      res = '''
+        В начале июля, в чрезвычайно жаркое время, под вечер, один молодой человек вышел
+        из своей каморки, которую нанимал от жильцов в С-м переулке, на улицу и
+        медленно, как бы в нерешимости, отправился к К-ну мосту.
+      '''
+
+      expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
