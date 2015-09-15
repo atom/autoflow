@@ -68,7 +68,7 @@ module.exports =
     atom.config.get('editor.preferredLineLength', scope: editor.getRootScopeDescriptor())
 
   wrapSegment: (segment, currentLineLength, wrapColumn) ->
-    /[\wа-яё]/i.test(segment) and
+    /[\w\u0410-\u042F\u0401\u0430-\u044F\u0451]/.test(segment) and
       (currentLineLength + segment.length > wrapColumn) and
       (currentLineLength > 0 or segment.length < wrapColumn)
 
