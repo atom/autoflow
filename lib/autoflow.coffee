@@ -17,6 +17,9 @@ module.exports =
 
   reflow: (text, {wrapColumn}) ->
     paragraphs = []
+    # Convert all \r\n and \r to \n. The text buffer will normalize them later
+    text = text.replace(/\r\n/g, '\n')
+    text = text.replace(/\r/g, '\n')
     paragraphBlocks = text.split(/\n\s*\n/g)
 
     for block in paragraphBlocks
