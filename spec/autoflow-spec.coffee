@@ -1,5 +1,6 @@
 describe "Autoflow package", ->
   [autoflow, editor, editorElement] = []
+  tabLength = 4
 
   describe "autoflow:reflow-selection", ->
     beforeEach ->
@@ -13,6 +14,7 @@ describe "Autoflow package", ->
         editorElement = atom.views.getView(editor)
 
         atom.config.set('editor.preferredLineLength', 30)
+        atom.config.set('editor.tabLength', tabLength)
 
         activationPromise = atom.packages.activatePackage('autoflow')
 
@@ -31,6 +33,15 @@ describe "Autoflow package", ->
         foo
         bar
       """
+
+    it "rearranges line breaks in the current selection to ensure lines are shorter than config.editor.preferredLineLength honoring tabLength", ->
+      editor.setText "\t\tThis is the first paragraph and it is longer than the preferred line length so it should be reflowed.\n\n\t\tThis is a short paragraph.\n\n\t\tAnother long paragraph, it should also be reflowed with the use of this single command."
+
+      editor.selectAll()
+      atom.commands.dispatch editorElement, 'autoflow:reflow-selection'
+
+      exedOut = editor.getText().replace(/\t/g, Array(tabLength+1).join 'X')
+      expect(exedOut).toBe "XXXXXXXXThis is the first\nXXXXXXXXparagraph and it is\nXXXXXXXXlonger than the\nXXXXXXXXpreferred line length\nXXXXXXXXso it should be\nXXXXXXXXreflowed.\n\nXXXXXXXXThis is a short\nXXXXXXXXparagraph.\n\nXXXXXXXXAnother long\nXXXXXXXXparagraph, it should\nXXXXXXXXalso be reflowed with\nXXXXXXXXthe use of this single\nXXXXXXXXcommand."
 
     it "rearranges line breaks in the current selection to ensure lines are shorter than config.editor.preferredLineLength", ->
       editor.setText """
