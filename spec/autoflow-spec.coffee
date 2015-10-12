@@ -269,7 +269,8 @@ describe "Autoflow package", ->
 
       expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
 
-    it 'handles `yo` character properly', -> # Because there're known problems with this character in major regex engines
+    it 'handles `yo` character properly', ->
+      # Because there're known problems with this character in major regex engines
       text = 'Ё Ё Ё'
 
       res = '''
