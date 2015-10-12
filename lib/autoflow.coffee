@@ -1,5 +1,12 @@
 _ = require 'underscore-plus'
 
+CharacterPattern = ///
+  [
+    \w                                     # English
+    \u0410-\u042F\u0401\u0430-\u044F\u0451 # Cyrillic
+  ]
+///
+
 module.exports =
   activate: ->
     atom.commands.add 'atom-text-editor',
@@ -68,7 +75,7 @@ module.exports =
     atom.config.get('editor.preferredLineLength', scope: editor.getRootScopeDescriptor())
 
   wrapSegment: (segment, currentLineLength, wrapColumn) ->
-    /[\w\u0410-\u042F\u0401\u0430-\u044F\u0451]/.test(segment) and
+    CharacterPattern.test(segment) and
       (currentLineLength + segment.length > wrapColumn) and
       (currentLineLength > 0 or segment.length < wrapColumn)
 
