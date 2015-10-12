@@ -245,7 +245,7 @@ describe "Autoflow package", ->
       expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
 
     it 'properly handles CRLF', ->
-      text = "This is the first line and it is longer than the preferred line length so it should be reflowed.\r\nThis is a short line which should\r\nbe reflowed with the following line.\r\nAnother long line, it should also be reflowed with everything above it when it is all reflowed."
+      text = "This is the first line and it is longer than the preferred line length so it should be reflowed.\r\nThis is a short line which should\r\nbe reflowed with the following line.\rAnother long line, it should also be reflowed with everything above it when it is all reflowed."
 
       res =
         '''
