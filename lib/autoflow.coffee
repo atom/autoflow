@@ -11,11 +11,13 @@ module.exports =
     range = editor.getCurrentParagraphBufferRange() if range.isEmpty()
     return unless range?
 
-    reflowOptions = wrapColumn: @getPreferredLineLength(editor)
+    reflowOptions =
+        wrapColumn: @getPreferredLineLength(editor)
+        tabLength: @getTabLength(editor)
     reflowedText = @reflow(editor.getTextInRange(range), reflowOptions)
     editor.getBuffer().setTextInRange(range, reflowedText)
 
-  reflow: (text, {wrapColumn}) ->
+  reflow: (text, {wrapColumn, tabLength}) ->
     paragraphs = []
     paragraphBlocks = text.split(/\n\s*\n/g)
 
@@ -23,6 +25,9 @@ module.exports =
 
       # TODO: this could be more language specific. Use the actual comment char.
       linePrefix = block.match(/^\s*[\/#*-]*\s*/g)[0]
+      linePrefixTabExpanded = linePrefix
+      if tabLength
+        linePrefixTabExpanded = linePrefix.replace(/\t/g, Array(tabLength+1).join ' ')
       blockLines = block.split('\n')
 
       if linePrefix
@@ -35,13 +40,13 @@ module.exports =
 
       lines = []
       currentLine = []
-      currentLineLength = linePrefix.length
+      currentLineLength = linePrefixTabExpanded.length
 
       for segment in @segmentText(blockLines.join(' '))
         if @wrapSegment(segment, currentLineLength, wrapColumn)
           lines.push(linePrefix + currentLine.join(''))
           currentLine = []
-          currentLineLength = linePrefix.length
+          currentLineLength = linePrefixTabExpanded.length
         currentLine.push(segment)
         currentLineLength += segment.length
       lines.push(linePrefix + currentLine.join(''))
@@ -49,6 +54,9 @@ module.exports =
       paragraphs.push(lines.join('\n').replace(/\s+\n/g, '\n'))
 
     paragraphs.join('\n\n')
+
+  getTabLength: (editor) ->
+    atom.config.get('editor.tabLength', scope: editor.getRootScopeDescriptor()) ? 2
 
   getPreferredLineLength: (editor) ->
     atom.config.get('editor.preferredLineLength', scope: editor.getRootScopeDescriptor())
