@@ -243,3 +243,16 @@ describe "Autoflow package", ->
         ea nulla ut commodo minim consequat cillum ad velit quis.
       '''
       expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
+
+    it 'properly handles CRLF', ->
+      text = "This is the first line and it is longer than the preferred line length so it should be reflowed.\r\nThis is a short line which should\r\nbe reflowed with the following line.\r\nAnother long line, it should also be reflowed with everything above it when it is all reflowed."
+
+      res =
+        '''
+        This is the first line and it is longer than the preferred line length so it
+        should be reflowed. This is a short line which should be reflowed with the
+        following line. Another long line, it should also be reflowed with everything
+        above it when it is all reflowed.
+        '''
+
+      expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res

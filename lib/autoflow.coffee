@@ -19,6 +19,9 @@ module.exports =
 
   reflow: (text, {wrapColumn, tabLength}) ->
     paragraphs = []
+    # Convert all \r\n and \r to \n. The text buffer will normalize them later
+    text = text.replace(/\r\n/g, '\n')
+    text = text.replace(/\r/g, '\n')
     paragraphBlocks = text.split(/\n\s*\n/g)
     if tabLength
       tabLengthInSpaces = Array(tabLength + 1).join(' ')
