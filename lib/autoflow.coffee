@@ -20,14 +20,18 @@ module.exports =
   reflow: (text, {wrapColumn, tabLength}) ->
     paragraphs = []
     paragraphBlocks = text.split(/\n\s*\n/g)
+    if tabLength
+      tabLengthInSpaces = Array(tabLength + 1).join(' ')
+    else
+      tabLengthInSpaces = ''
 
     for block in paragraphBlocks
 
       # TODO: this could be more language specific. Use the actual comment char.
       linePrefix = block.match(/^\s*[\/#*-]*\s*/g)[0]
       linePrefixTabExpanded = linePrefix
-      if tabLength
-        linePrefixTabExpanded = linePrefix.replace(/\t/g, Array(tabLength+1).join ' ')
+      if tabLengthInSpaces
+        linePrefixTabExpanded = linePrefix.replace(/\t/g, tabLengthInSpaces)
       blockLines = block.split('\n')
 
       if linePrefix
