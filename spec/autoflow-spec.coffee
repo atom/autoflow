@@ -69,6 +69,37 @@ describe "Autoflow package", ->
         command.
       """
 
+    it "is not confused when the selection boundary is between paragraphs", ->
+      editor.setText """
+        v--- SELECTION STARTS AT THE BEGINNING OF THE NEXT LINE (pos 1,0)
+
+        The preceding newline should not be considered part of this paragraph.
+
+        The newline at the end of this paragraph should be preserved and not
+        converted into a space.
+
+        ^--- SELECTION ENDS AT THE BEGINNING OF THE PREVIOUS LINE (pos 6,0)
+      """
+
+      editor.setCursorBufferPosition([1, 0])
+      editor.selectToBufferPosition([6, 0])
+      atom.commands.dispatch editorElement, 'autoflow:reflow-selection'
+
+      expect(editor.getText()).toBe """
+        v--- SELECTION STARTS AT THE BEGINNING OF THE NEXT LINE (pos 1,0)
+
+        The preceding newline should
+        not be considered part of this
+        paragraph.
+
+        The newline at the end of this
+        paragraph should be preserved
+        and not converted into a
+        space.
+
+        ^--- SELECTION ENDS AT THE BEGINNING OF THE PREVIOUS LINE (pos 6,0)
+      """
+
     it "reflows the current paragraph if nothing is selected", ->
       editor.setText """
         This is a preceding paragraph, which shouldn't be modified by a reflow of the following paragraph.
