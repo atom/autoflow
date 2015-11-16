@@ -111,6 +111,16 @@ describe "Autoflow package", ->
         words
       """
 
+    it "does not change the cursor screen position after reflowing paragraphs", ->
+      editor.setText("This is the first paragraph and it is longer than the preferred line length so it should be reflowed.")
+
+      editor.setCursorBufferPosition([0,20])
+      cursorPoint = editor.getCursorScreenPosition()
+      atom.commands.dispatch editorElement, 'autoflow:reflow-selection'
+
+      expect(editor.getCursorScreenPosition().row).toBe cursorPoint.row
+      expect(editor.getCursorScreenPosition().column).toBe cursorPoint.column
+
   describe "reflowing text", ->
     beforeEach ->
       autoflow = require("../lib/autoflow")

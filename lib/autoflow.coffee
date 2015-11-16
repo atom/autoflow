@@ -22,7 +22,9 @@ module.exports =
         wrapColumn: @getPreferredLineLength(editor)
         tabLength: @getTabLength(editor)
     reflowedText = @reflow(editor.getTextInRange(range), reflowOptions)
+    cursorPoint = editor.getCursorScreenPosition()
     editor.getBuffer().setTextInRange(range, reflowedText)
+    editor.setCursorScreenPosition(cursorPoint)
 
   reflow: (text, {wrapColumn, tabLength}) ->
     paragraphs = []
