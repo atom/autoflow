@@ -114,7 +114,7 @@ describe "Autoflow package", ->
     it "moves the cursor to the correct position after reflowing paragraphs", ->
       editor.setText "This is the first paragraph and it is longer than the preferred line length so it should be reflowed."
 
-      editor.setCursorBufferPosition([0,20])
+      editor.setCursorBufferPosition([0, 20])
       atom.commands.dispatch editorElement, 'autoflow:reflow-selection'
 
       expect(editor.getCursorBufferPosition().row).toBe 0
@@ -125,7 +125,7 @@ describe "Autoflow package", ->
         This is another line.
       """
 
-      editor.setCursorBufferPosition([1,9])
+      editor.setCursorBufferPosition([1, 9])
       atom.commands.dispatch editorElement, 'autoflow:reflow-selection'
 
       expect(editor.getCursorBufferPosition().row).toBe 4
