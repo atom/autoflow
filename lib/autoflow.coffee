@@ -30,12 +30,14 @@ module.exports =
     # make sure the cursor is at the correct position after the reflow:
     # find cursor position in string before reflow,
     # and then calculate row and column from string after reflow
-    relCursorPoint = new Point(oldCursorPoint.row - range.start.row,
-                               oldCursorPoint.column - range.start.column)
-    relCursorPos = @posFromPoint(originalText, relCursorPoint)
-    newRelCursorPoint = @pointFromPos(reflowedText, relCursorPos)
-    newCursorPoint = range.start.translate(newRelCursorPoint)
-    editor.setCursorBufferPosition(newCursorPoint)
+    # only do that if the reflow was not in a selection
+    if editor.getSelectedBufferRange().isEmpty()
+      relCursorPoint = new Point(oldCursorPoint.row - range.start.row,
+                                 oldCursorPoint.column - range.start.column)
+      relCursorPos = @posFromPoint(originalText, relCursorPoint)
+      newRelCursorPoint = @pointFromPos(reflowedText, relCursorPos)
+      newCursorPoint = range.start.translate(newRelCursorPoint)
+      editor.setCursorBufferPosition(newCursorPoint)
 
   reflow: (text, {wrapColumn, tabLength}) ->
     paragraphs = []
@@ -118,6 +120,6 @@ module.exports =
         if totalCharacters <= pos
           row++
         else
-          col = pos - totalCharacters + line.length + 1 if col == -1
+          col = pos - totalCharacters + line.length + 1 if col is -1
     point = new Point(row, col)
     point
