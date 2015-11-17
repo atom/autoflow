@@ -1,4 +1,5 @@
 _ = require 'underscore-plus'
+{Point} = require 'atom'
 
 CharacterPattern = ///
   [
@@ -21,10 +22,20 @@ module.exports =
     reflowOptions =
         wrapColumn: @getPreferredLineLength(editor)
         tabLength: @getTabLength(editor)
-    reflowedText = @reflow(editor.getTextInRange(range), reflowOptions)
-    cursorPoint = editor.getCursorScreenPosition()
+    originalText = editor.getTextInRange(range)
+    reflowedText = @reflow(originalText, reflowOptions)
+    oldCursorPoint = editor.getCursorBufferPosition()
     editor.getBuffer().setTextInRange(range, reflowedText)
-    editor.setCursorScreenPosition(cursorPoint)
+
+    # make sure the cursor is at the correct position after the reflow:
+    # find cursor position in string before reflow,
+    # and then calculate row and column from string after reflow
+    relCursorPoint = new Point(oldCursorPoint.row - range.start.row,
+                               oldCursorPoint.column - range.start.column)
+    relCursorPos = @posFromPoint(originalText, relCursorPoint)
+    newRelCursorPoint = @pointFromPos(reflowedText, relCursorPos)
+    newCursorPoint = range.start.translate(newRelCursorPoint)
+    editor.setCursorBufferPosition(newCursorPoint)
 
   reflow: (text, {wrapColumn, tabLength}) ->
     paragraphs = []
@@ -86,3 +97,27 @@ module.exports =
     re = /[\s]+|[^\s]+/g
     segments.push(match[0]) while match = re.exec(text)
     segments
+
+  posFromPoint: (text, point) ->
+    # Given a Point in buffer coordinates, find the corresponding position in the String text
+    splitText = text.split('\n')
+    characterNumbers = (line.length + 1 for line in splitText)
+    characterNumbers.splice(point.row, characterNumbers.length - point.row)
+    pos = _.reduce(characterNumbers, ((memo, num) -> memo + num), 0) + point.column
+    pos
+
+  pointFromPos: (text, pos) ->
+    # Given a position in the String text, find the corresponding Point in buffer coordinates
+    splitText = text.split('\n')
+    row = 0
+    col = -1
+    totalCharacters = 0
+    for line in splitText
+      do (line) ->
+        totalCharacters += line.length + 1
+        if totalCharacters <= pos
+          row++
+        else
+          col = pos - totalCharacters + line.length + 1 if col == -1
+    point = new Point(row, col)
+    point
