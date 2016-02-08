@@ -28,6 +28,19 @@ module.exports =
     paragraphs = []
     # Convert all \r\n and \r to \n. The text buffer will normalize them later
     text = text.replace(/\r\n?/g, '\n')
+
+    leadingVerticalSpace = text.match(/^\s*\n/)
+    if leadingVerticalSpace
+      text = text.substr(leadingVerticalSpace.length)
+    else
+      leadingVerticalSpace = ''
+
+    trailingVerticalSpace = text.match(/\n\s*$/)
+    if trailingVerticalSpace
+      text = text.substr(0, text.length - trailingVerticalSpace.length)
+    else
+      trailingVerticalSpace = ''
+
     paragraphBlocks = text.split(/\n\s*\n/g)
     if tabLength
       tabLengthInSpaces = Array(tabLength + 1).join(' ')
@@ -66,7 +79,7 @@ module.exports =
 
       paragraphs.push(lines.join('\n').replace(/\s+\n/g, '\n'))
 
-    paragraphs.join('\n\n')
+    leadingVerticalSpace + paragraphs.join('\n\n') + trailingVerticalSpace
 
   getTabLength: (editor) ->
     atom.config.get('editor.tabLength', scope: editor.getRootScopeDescriptor()) ? 2
