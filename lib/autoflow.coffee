@@ -50,7 +50,7 @@ module.exports =
     for block in paragraphBlocks
 
       # TODO: this could be more language specific. Use the actual comment char.
-      linePrefix = block.match(/^\s*[\/#*%->(;;)]*\s*/g)[0]
+      linePrefix = block.match(/^\s*[\/#*%->(;;)(#')']*\s*/g)[0]
       linePrefixTabExpanded = linePrefix
       if tabLengthInSpaces
         linePrefixTabExpanded = linePrefix.replace(/\t/g, tabLengthInSpaces)
@@ -68,22 +68,22 @@ module.exports =
       currentLine = []
       currentLineLength = linePrefixTabExpanded.length
 
-      notFirstLine = false;
+      notFirstLine = false
       for segment in @segmentText(blockLines.join(' '))
         if @wrapSegment(segment, currentLineLength, wrapColumn)
 
           # Independent of line prefix don't mess with it on the first line
           if notFirstLine
             # Handle C comments
-            if linePrefix.search(/^\s*\/\*/) != -1
+            if linePrefix.search(/^\s*\/\*/) isnt -1
               linePrefix = linePrefix.replace(/^(\s*)\/\*/, '$1  ')
             # Handle - list items
-            else if linePrefix.search(/^\s*-/) != -1
+            else if linePrefix.search(/^\s*-/) isnt -1
               linePrefix = linePrefix.replace(/^(\s*)[\/#*-]/, '$1 ')
           lines.push(linePrefix + currentLine.join(''))
           currentLine = []
           currentLineLength = linePrefixTabExpanded.length
-          notFirstLine = true;
+          notFirstLine = true
         currentLine.push(segment)
         currentLineLength += segment.length
       lines.push(linePrefix + currentLine.join(''))
