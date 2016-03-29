@@ -68,12 +68,12 @@ module.exports =
       currentLine = []
       currentLineLength = linePrefixTabExpanded.length
 
-      notFirstLine = false
+      firstLine = true
       for segment in @segmentText(blockLines.join(' '))
         if @wrapSegment(segment, currentLineLength, wrapColumn)
 
           # Independent of line prefix don't mess with it on the first line
-          if notFirstLine
+          if firstLine isnt true
             # Handle C comments
             if linePrefix.search(/^\s*\/\*/) isnt -1
               linePrefix = linePrefix.replace(/^(\s*)\/\*/, '$1  ')
@@ -83,7 +83,7 @@ module.exports =
           lines.push(linePrefix + currentLine.join(''))
           currentLine = []
           currentLineLength = linePrefixTabExpanded.length
-          notFirstLine = true
+          firstLine = false
         currentLine.push(segment)
         currentLineLength += segment.length
       lines.push(linePrefix + currentLine.join(''))
