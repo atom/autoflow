@@ -48,22 +48,26 @@ module.exports =
       tabLengthInSpaces = ''
 
     for block in paragraphBlocks
-
       # TODO: this could be more language specific. Use the actual comment char.
       linePrefix = block.match(/^\s*[\/#*-]*\s*/g)[0]
       linePrefixTabExpanded = linePrefix
       if tabLengthInSpaces
         linePrefixTabExpanded = linePrefix.replace(/\t/g, tabLengthInSpaces)
       blockLines = block.split('\n')
-
+      
       if linePrefix
         escapedLinePrefix = _.escapeRegExp(linePrefix)
         blockLines = blockLines.map (blockLine) ->
           blockLine.replace(///^#{escapedLinePrefix}///, '')
-
+      
       blockLines = blockLines.map (blockLine) ->
         blockLine.replace(/^\s+/, '')
-
+      if blockLines.length > 1
+        blockLastLine = blockLines.pop()
+        blockLines = blockLines.map (blockLine) ->
+          blockLine.replace(/\s+$/, '')
+        blockLines.push(blockLastLine)
+      
       lines = []
       currentLine = []
       currentLineLength = linePrefixTabExpanded.length
