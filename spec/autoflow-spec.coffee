@@ -315,6 +315,9 @@ describe "Autoflow package", ->
     it 'removes trailing spaces except the last line', ->
       text = "If there are trailing spaces in a line, the reflow    \r\nshould remove them except the last line of the block."
 
-      res = "If there are trailing spaces in a line, the reflow should remove\r\nthem except the last line of the block."
+      res = '''
+        If there are trailing spaces in a line, the reflow should remove
+        them except the last line of the block.
+      '''
 
       expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
