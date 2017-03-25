@@ -63,6 +63,11 @@ module.exports =
 
       blockLines = blockLines.map (blockLine) ->
         blockLine.replace(/^\s+/, '')
+      if blockLines.length > 1
+        blockLastLine = blockLines.pop()
+        blockLines = blockLines.map (blockLine) ->
+          blockLine.replace(/\s+$/, '')
+        blockLines.push(blockLastLine)
 
       lines = []
       currentLine = []
