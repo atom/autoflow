@@ -64,22 +64,31 @@ module.exports =
       blockLines = blockLines.map (blockLine) ->
         blockLine.replace(/^\s+/, '')
 
-      lines = []
-      currentLine = []
-      currentLineLength = linePrefixTabExpanded.length
-
-      for segment in @segmentText(blockLines.join(' '))
-        if @wrapSegment(segment, currentLineLength, wrapColumn)
-          lines.push(linePrefix + currentLine.join(''))
-          currentLine = []
-          currentLineLength = linePrefixTabExpanded.length
-        currentLine.push(segment)
-        currentLineLength += segment.length
-      lines.push(linePrefix + currentLine.join(''))
+      lines = @reflowNonPrefixedLines(blockLines.join(' '),
+                                      wrapColumn - linePrefixTabExpanded.length)
+      lines = lines.map (line) ->
+        linePrefix + line
 
       paragraphs.push(lines.join('\n').replace(/\s+\n/g, '\n'))
 
     leadingVerticalSpace + paragraphs.join('\n\n') + trailingVerticalSpace
+
+  reflowNonPrefixedLines: (text, wrapColumn) ->
+    lines = []
+    currentLine = []
+    currentLineLength = 0
+
+    for segment in @segmentText(text)
+      # A segment is basically a word or whitespace
+      if @wrapSegment(segment, currentLineLength, wrapColumn)
+        lines.push(currentLine.join(''))
+        currentLine = []
+        currentLineLength = 0
+      currentLine.push(segment)
+      currentLineLength += segment.length
+    lines.push(currentLine.join(''))
+
+    return lines
 
   getTabLength: (editor) ->
     atom.config.get('editor.tabLength', scope: editor.getRootScopeDescriptor()) ? 2
