@@ -195,7 +195,7 @@ describe "Autoflow package", ->
       '''
       expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
 
-    it 'respects prefixed text (comments!)', ->
+    it 'respects prefixed text (sh/haskell/idris comments)', ->
       text = '''
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus gravida nibh id magna ullamcorper sagittis. Maecenas
         et enim eu orci tincidunt adipiscing
@@ -203,9 +203,12 @@ describe "Autoflow package", ->
 
           #  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           #  Phasellus gravida
-          #  nibh id magna ullamcorper
-          #  tincidunt adipiscing lacinia a dui. Etiam quis erat dolor.
-          #  rutrum nisl fermentum  rhoncus. Duis blandit ligula facilisis fermentum
+
+          --  nibh id magna
+          --  ullamcorper
+
+          ||| tincidunt adipiscing lacinia a dui. Etiam quis erat dolor.
+          ||| rutrum nisl fermentum  rhoncus. Duis blandit ligula facilisis fermentum
       '''
 
       res = '''
@@ -214,9 +217,11 @@ describe "Autoflow package", ->
         aliquam ligula.
 
           #  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus gravida
-          #  nibh id magna ullamcorper tincidunt adipiscing lacinia a dui. Etiam quis
-          #  erat dolor. rutrum nisl fermentum  rhoncus. Duis blandit ligula facilisis
-          #  fermentum
+
+          -- nibh id magna ullamcorper
+
+          ||| tincidunt adipiscing lacinia a dui. Etiam quis erat dolor. rutrum nisl fermentum
+          ||| rhoncus. Duis blandit ligula facilisis fermentum
       '''
       expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
 
