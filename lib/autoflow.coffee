@@ -68,6 +68,10 @@ module.exports =
       currentLine = []
       currentLineLength = linePrefixTabExpanded.length
 
+      wrappedLinePrefix = linePrefix
+        .replace(/^(\s*)\/\*/, '$1  ')
+        .replace(/^(\s*)-/, '$1 ')
+
       firstLine = true
       for segment in @segmentText(blockLines.join(' '))
         if @wrapSegment(segment, currentLineLength, wrapColumn)
@@ -75,11 +79,8 @@ module.exports =
           # Independent of line prefix don't mess with it on the first line
           if firstLine isnt true
             # Handle C comments
-            if linePrefix.search(/^\s*\/\*/) isnt -1
-              linePrefix = linePrefix.replace(/^(\s*)\/\*/, '$1  ')
-            # Handle - list items
-            else if linePrefix.search(/^\s*-/) isnt -1
-              linePrefix = linePrefix.replace(/^(\s*)[\/#*-]/, '$1 ')
+            if linePrefix.search(/^\s*\/\*/) isnt -1 or linePrefix.search(/^\s*-/) isnt -1
+              linePrefix = wrappedLinePrefix
           lines.push(linePrefix + currentLine.join(''))
           currentLine = []
           currentLineLength = linePrefixTabExpanded.length
