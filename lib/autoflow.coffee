@@ -9,9 +9,13 @@ CharacterPattern = ///
 
 module.exports =
   activate: ->
-    atom.commands.add 'atom-text-editor',
+    @commandDisposable = atom.commands.add 'atom-text-editor',
       'autoflow:reflow-selection': (event) =>
         @reflowSelection(event.currentTarget.getModel())
+
+  deactivate: ->
+    @commandDisposable?.dispose()
+    @commandDisposable = null
 
   reflowSelection: (editor) ->
     range = editor.getSelectedBufferRange()
@@ -50,7 +54,8 @@ module.exports =
     for block in paragraphBlocks
 
       # TODO: this could be more language specific. Use the actual comment char.
-      linePrefix = block.match(/^\s*[\/#*-|]*\s*/g)[0]
+      # Remember that `-` has to be the last character in the set
+      linePrefix = block.match(/^\s*([#%*>-]|\/\/|\/\*|;;|#'|\|\|\|)?\s*/g)[0]
       linePrefixTabExpanded = linePrefix
       if tabLengthInSpaces
         linePrefixTabExpanded = linePrefix.replace(/\t/g, tabLengthInSpaces)
@@ -68,11 +73,23 @@ module.exports =
       currentLine = []
       currentLineLength = linePrefixTabExpanded.length
 
+      wrappedLinePrefix = linePrefix
+        .replace(/^(\s*)\/\*/, '$1  ')
+        .replace(/^(\s*)-/, '$1 ')
+
+      firstLine = true
       for segment in @segmentText(blockLines.join(' '))
         if @wrapSegment(segment, currentLineLength, wrapColumn)
+
+          # Independent of line prefix don't mess with it on the first line
+          if firstLine isnt true
+            # Handle C comments
+            if linePrefix.search(/^\s*\/\*/) isnt -1 or linePrefix.search(/^\s*-/) isnt -1
+              linePrefix = wrappedLinePrefix
           lines.push(linePrefix + currentLine.join(''))
           currentLine = []
           currentLineLength = linePrefixTabExpanded.length
+          firstLine = false
         currentLine.push(segment)
         currentLineLength += segment.length
       lines.push(linePrefix + currentLine.join(''))
