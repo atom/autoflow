@@ -9,9 +9,13 @@ CharacterPattern = ///
 
 module.exports =
   activate: ->
-    atom.commands.add 'atom-text-editor',
+    @commandDisposable = atom.commands.add 'atom-text-editor',
       'autoflow:reflow-selection': (event) =>
         @reflowSelection(event.currentTarget.getModel())
+
+  deactivate: ->
+    @commandDisposable?.dispose()
+    @commandDisposable = null
 
   reflowSelection: (editor) ->
     range = editor.getSelectedBufferRange()
