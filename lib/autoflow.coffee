@@ -50,7 +50,8 @@ module.exports =
     for block in paragraphBlocks
 
       # TODO: this could be more language specific. Use the actual comment char.
-      linePrefix = block.match(/^\s*[\/#*%->(;;)(#')']*\s*/g)[0]
+      # Remember that `-` has to be the last character in the set
+      linePrefix = block.match(/^\s*([#%*>-]|\/\/|\/\*|;;)?\s*/g)[0]
       linePrefixTabExpanded = linePrefix
       if tabLengthInSpaces
         linePrefixTabExpanded = linePrefix.replace(/\t/g, tabLengthInSpaces)
