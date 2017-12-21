@@ -54,8 +54,8 @@ module.exports =
     for block in paragraphBlocks
 
       # TODO: this could be more language specific. Use the actual comment char.
-      # Remember that `-` has to be the last character in the set
-      linePrefix = block.match(/^\s*([#%*>-]|\/\/|\/\*|;;|#')?\s*/g)[0]
+      # Remember that `-` has to be the last character in the character class.
+      linePrefix = block.match(/^\s*(\/\/|\/\*|;;|#'|\|\|\||--|[#%*>-])?\s*/g)[0]
       linePrefixTabExpanded = linePrefix
       if tabLengthInSpaces
         linePrefixTabExpanded = linePrefix.replace(/\t/g, tabLengthInSpaces)
@@ -75,7 +75,7 @@ module.exports =
 
       wrappedLinePrefix = linePrefix
         .replace(/^(\s*)\/\*/, '$1  ')
-        .replace(/^(\s*)-/, '$1 ')
+        .replace(/^(\s*)-(?!-)/, '$1 ')
 
       firstLine = true
       for segment in @segmentText(blockLines.join(' '))
@@ -84,7 +84,7 @@ module.exports =
           # Independent of line prefix don't mess with it on the first line
           if firstLine isnt true
             # Handle C comments
-            if linePrefix.search(/^\s*\/\*/) isnt -1 or linePrefix.search(/^\s*-/) isnt -1
+            if linePrefix.search(/^\s*\/\*/) isnt -1 or linePrefix.search(/^\s*-(?!-)/) isnt -1
               linePrefix = wrappedLinePrefix
           lines.push(linePrefix + currentLine.join(''))
           currentLine = []
