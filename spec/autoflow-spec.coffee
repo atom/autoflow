@@ -531,3 +531,32 @@ describe "Autoflow package", ->
         '''
 
       expect(autoflow.reflow(text, wrapColumn: 80)).toEqual res
+
+    it "doesn't allow special characters to surpass wrapColumn", ->
+      test =
+        '''
+        Imagine that I'm writing some LaTeX code. I start a comment, but change my mind. %
+
+        Now I'm just kind of trucking along, doing some math and stuff. For instance, $3 + 4 = 7$. But maybe I'm getting really crazy and I use subtraction. It's kind of an obscure technique, but often it goes a bit like this: let $x = 2 + 2$, so $x - 1 = 3$ (quick maths).
+
+        That's OK I guess, but now look at this cool thing called set theory: $\\{n + 42 : n \\in \\mathbb{N}\\}$. Wow. Neat. But we all know why we're really here. If you peer deep down into your heart, and you stare into the depths of yourself: is $P = NP$? Beware, though; many have tried and failed to answer this question. It is by no means for the faint of heart.
+        '''
+
+      res =
+        '''
+        Imagine that I'm writing some LaTeX code. I start a comment, but change my mind.
+        %
+
+        Now I'm just kind of trucking along, doing some math and stuff. For instance, $3
+        + 4 = 7$. But maybe I'm getting really crazy and I use subtraction. It's kind of
+        an obscure technique, but often it goes a bit like this: let $x = 2 + 2$, so $x
+        - 1 = 3$ (quick maths).
+
+        That's OK I guess, but now look at this cool thing called set theory: $\\{n + 42
+        : n \\in \\mathbb{N}\\}$. Wow. Neat. But we all know why we're really here. If you
+        peer deep down into your heart, and you stare into the depths of yourself: is $P
+        = NP$? Beware, though; many have tried and failed to answer this question. It is
+        by no means for the faint of heart.
+        '''
+
+      expect(autoflow.reflow(test, wrapColumn: 80)).toEqual res
