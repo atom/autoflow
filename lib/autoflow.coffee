@@ -2,8 +2,7 @@ _ = require 'underscore-plus'
 
 CharacterPattern = ///
   [
-    \w                                     # English
-    \u0410-\u042F\u0401\u0430-\u044F\u0451 # Cyrillic
+    ^\s
   ]
 ///
 
